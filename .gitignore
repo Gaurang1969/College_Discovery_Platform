@@ -21,3 +21,6 @@ yarn-error.log*
 # Operating System files
 .DS_Store
 Thumbs.db
+
+# Prisma generated folder (Crucial to add this)
+src/generated/prisma/
