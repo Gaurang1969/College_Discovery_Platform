@@ -22,7 +22,7 @@ const sizeStyles: Record<Size, string> = {
   lg: "px-6 py-3 text-lg",
 };
 
-export default function Button({
+export function Button({
   variant = "primary",
   size = "md",
   disabled,

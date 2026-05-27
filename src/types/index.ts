@@ -1,4 +1,4 @@
-import type { College, User, SavedCollege } from "@prisma/client";
+import type { College, User, SavedCollege } from "@/generated/prisma";
 
 export type { College, User, SavedCollege };
 

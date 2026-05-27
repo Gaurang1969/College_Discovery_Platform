@@ -14,7 +14,7 @@ const variantStyles: Record<Variant, string> = {
   danger: "bg-red-100 text-red-700",
 };
 
-export default function Badge({
+export function Badge({
   children,
   variant = "default",
   className = "",

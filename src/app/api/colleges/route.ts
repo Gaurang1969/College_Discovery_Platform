@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CollegeQuerySchema } from "@/lib/validators";
@@ -35,10 +36,12 @@ export async function GET(req: NextRequest) {
     ]);
 
     return NextResponse.json({ data, total, page, pageSize });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Colleges API Error:", error);
+    // This sends the actual error message to the browser, 
+    // so you don't have to guess what's wrong.
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Database error", details: error.message },
       { status: 500 }
     );
   }

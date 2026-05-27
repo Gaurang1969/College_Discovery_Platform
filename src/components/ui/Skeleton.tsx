@@ -5,7 +5,7 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   height?: string;
 }
 
-export default function Skeleton({
+export function Skeleton({
   className = "",
   width = "w-full",
   height = "h-4",
