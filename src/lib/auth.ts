@@ -1,22 +1,21 @@
-import { DefaultSession } from "next-auth";
+import NextAuth, { type NextAuthOptions, type DefaultSession } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { prisma } from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 
+// 1. Tell TypeScript that session.user has an 'id' property
 declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      email: string;
     } & DefaultSession["user"];
   }
 }
 
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
+// 2. Export your configurations
+export const authOptions: NextAuthOptions = {
   providers: [
-    Credentials({
+    CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
@@ -28,19 +27,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string },
+          where: {
+            email: credentials.email,
+          },
         });
 
-        if (!user || !user.password) return null;
+        if (!user || !user.password) {
+          return null;
+        }
 
         const isValid = await bcrypt.compare(
-          credentials.password as string,
+          credentials.password,
           user.password
         );
 
-        if (!isValid) return null;
+        if (!isValid) {
+          return null;
+        }
 
-        return { id: user.id, email: user.email };
+        return {
+          id: user.id,
+          email: user.email,
+        };
       },
     }),
   ],
@@ -48,14 +56,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.email = user.email;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token) {
+      if (session.user) {
         session.user.id = token.id as string;
-        session.user.email = token.email as string;
       }
       return session;
     },
@@ -63,5 +69,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
   },
-  session: { strategy: "jwt" },
-});
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+};

@@ -10,22 +10,22 @@ datasource db {
 model User {
   id        String         @id @default(cuid())
   email     String         @unique
-  password  String
   createdAt DateTime       @default(now())
+  password  String
   saved     SavedCollege[]
 }
 
 model College {
-  id          String         @id @default(cuid())
-  name        String
-  location    String
-  fees        Int
-  rating      Float
-  courses     String[]
-  overview    String
-  placements  Json
-  createdAt   DateTime       @default(now())
-  saved       SavedCollege[]
+  id         String         @id @default(cuid())
+  name       String
+  location   String
+  fees       Int
+  rating     Float
+  courses    String[]
+  placements Json
+  createdAt  DateTime       @default(now())
+  overview   String
+  saved      SavedCollege[]
 
   @@index([name])
   @@index([location])
@@ -38,8 +38,8 @@ model SavedCollege {
   userId    String
   collegeId String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
   college   College  @relation(fields: [collegeId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, collegeId])
 }

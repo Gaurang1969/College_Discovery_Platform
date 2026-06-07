@@ -38,7 +38,8 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Toggle */}
-          <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+          <button 
+          className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
             <div className="w-6 h-0.5 bg-gray-600 mb-1" />
             <div className="w-6 h-0.5 bg-gray-600 mb-1" />
             <div className="w-6 h-0.5 bg-gray-600" />
